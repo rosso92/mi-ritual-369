@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#120016" />
+  <title>Mi Ritual 369</title>
+  <style>
+    :root {
+      --bg1: #050507;
+      --bg2: #16001f;
+      --card: rgba(255,255,255,0.08);
+      --card-border: rgba(217,70,239,0.18);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.74);
+      --accent: #a21caf;
+      --accent-2: #86198f;
+      --field-bg: rgba(255,255,255,0.1);
+      --placeholder: rgba(255,255,255,0.48);
+      --success: #22c55e;
+    }
+    .light {
+      --bg1: #f7f3ff;
+      --bg2: #eadcff;
+      --card: rgba(255,255,255,0.9);
+      --card-border: rgba(134,25,143,0.18);
+      --text: #1f1130;
+      --muted: rgba(31,17,48,0.72);
+      --accent: #a21caf;
+      --accent-2: #86198f;
+      --field-bg: rgba(255,255,255,0.92);
+      --placeholder: rgba(31,17,48,0.45);
+      --success: #16a34a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app {
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 32px;
+      margin: 0;
+      line-height: 1.05;
+    }
+    .theme-toggle {
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 16px;
+      width: 48px;
+      height: 48px;
+      font-size: 18px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      margin-bottom: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+    .label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: var(--field-bg);
+      color: var(--text);
+      padding: 14px;
+      font-size: 16px;
+      resize: vertical;
+      min-height: 106px;
+      outline: none;
+      caret-color: #d946ef;
+    }
+    textarea::placeholder { color: var(--placeholder); }
+    .progress-row, .mini-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .progress {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.12);
+      margin: 10px 0 8px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #d946ef, #a21caf);
+      transition: width .25s ease;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .count {
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .done { color: var(--success); }
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 18px;
+      background: var(--accent);
+      color: white;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .day-pill {
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(162,28,175,0.25);
+      border: 1px solid var(--card-border);
+      font-size: 14px;
+    }
+    .footer-tip {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 12px;
+      padding-bottom: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div>
+        <div class="subtitle">Método 3-6-9</div>
+        <h1>Mi Ritual 369</h1>
+      </div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">☀️</button>
+    </div>
+
+    <div class="card">
+      <div class="label">✨ Tu frase de hoy</div>
+      <textarea id="affirmation" placeholder="Escribe aquí tu frase para hoy..."></textarea>
+    </div>
+
+    <div class="card">
+      <div class="progress-row">
+        <span>Progreso de hoy</span>
+        <strong id="progressPercent">0%</strong>
+      </div>
+      <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+      <div class="mini-row" style="color: var(--muted)">
+        <span id="progressText">0/18 repeticiones</span>
+        <span id="streakText">Racha: 0 días</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Mañana</div>
+          <div class="small">Recordatorio: 08:00</div>
+        </div>
+        <div id="morningCount" class="count">0/3</div>
+      </div>
+      <textarea id="morningText" placeholder="Escribe tu frase 3 veces, una por línea..."></textarea>
+      <button id="fillMorning" class="btn">Autocompletar 3 veces</button>
+    </div>
+
+    <div class="card">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Tarde</div>
+          <div class="small">Recordatorio: 17:00</div>
+        </div>
+        <div id="afternoonCount" class="count">0/6</div>
+      </div>
+      <textarea id="afternoonText" placeholder="Escribe tu frase 6 veces, una por línea..."></textarea>
+      <button id="fillAfternoon" class="btn">Autocompletar 6 veces</button>
+    </div>
+
+    <div class="card">
+      <div class="section-head">
+        <div>
+          <div class="section-title">Noche</div>
+          <div class="small">Recordatorio: 23:59</div>
+        </div>
+        <div id="nightCount" class="count">0/9</div>
+      </div>
+      <textarea id="nightText" placeholder="Escribe tu frase 9 veces, una por línea..."></textarea>
+      <button id="fillNight" class="btn">Autocompletar 9 veces</button>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom: 12px; font-size: 18px;">Calendario de días completados</div>
+      <div id="calendar" class="calendar"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom: 12px; font-size: 18px;">Reflexión del día</div>
+      <textarea id="notes" placeholder="¿Cómo te sentiste hoy? ¿Qué hiciste para acercarte a tu objetivo?"></textarea>
+      <div class="actions" style="margin-top: 10px;">
+        <button id="resetToday" class="btn secondary">Reiniciar hoy</button>
+        <button id="deleteToday" class="btn" style="background:#b91c1c;">Borrar registro</button>
+      </div>
+    </div>
+
+    <div class="footer-tip">Consejo: escribe una frase clara, repítela con calma y acompáñala con una acción real durante el día.</div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'mi-ritual-369-static-v1';
+    const todayKey = () => new Date().toISOString().slice(0, 10);
+
+    const els = {
+      body: document.body,
+      themeToggle: document.getElementById('themeToggle'),
+      affirmation: document.getElementById('affirmation'),
+      morningText: document.getElementById('morningText'),
+      afternoonText: document.getElementById('afternoonText'),
+      nightText: document.getElementById('nightText'),
+      notes: document.getElementById('notes'),
+      morningCount: document.getElementById('morningCount'),
+      afternoonCount: document.getElementById('afternoonCount'),
+      nightCount: document.getElementById('nightCount'),
+      progressPercent: document.getElementById('progressPercent'),
+      progressText: document.getElementById('progressText'),
+      streakText: document.getElementById('streakText'),
+      progressFill: document.getElementById('progressFill'),
+      calendar: document.getElementById('calendar'),
+      fillMorning: document.getElementById('fillMorning'),
+      fillAfternoon: document.getElementById('fillAfternoon'),
+      fillNight: document.getElementById('fillNight'),
+      resetToday: document.getElementById('resetToday'),
+      deleteToday: document.getElementById('deleteToday'),
+    };
+
+    let state = {
+      theme: 'dark',
+      affirmation: '',
+      history: {}
+    };
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.theme = parsed.theme || 'dark';
+          state.affirmation = parsed.affirmation || '';
+          state.history = parsed.history || {};
+        }
+      } catch (e) {
+        console.error('No se pudo cargar', e);
+      }
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function applyTheme() {
+      document.documentElement.classList.toggle('light', state.theme === 'light');
+      els.themeToggle.textContent = state.theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function getTodayRecord() {
+      return state.history[todayKey()] || {
+        date: todayKey(),
+        affirmation: state.affirmation,
+        morningText: '',
+        afternoonText: '',
+        nightText: '',
+        notes: '',
+        morningDone: 0,
+        afternoonDone: 0,
+        nightDone: 0,
+      };
+    }
+
+    function normalizeLines(text) {
+      return text
+        .split('\n')
+        .map(line => line.replace(/\r/g, '').trim().toLowerCase())
+        .filter(Boolean);
+    }
+
+    function countOccurrences(text, target) {
+      if (!text.trim() || !target.trim()) return 0;
+      const lines = normalizeLines(text);
+      const normalizedTarget = target.trim().toLowerCase();
+      return lines.filter(line => line === normalizedTarget).length;
+    }
+
+    function saveTodayFields() {
+      const affirmation = els.affirmation.value;
+      state.affirmation = affirmation;
+      state.history[todayKey()] = {
+        date: todayKey(),
+        affirmation,
+        morningText: els.morningText.value,
+        afternoonText: els.afternoonText.value,
+        nightText: els.nightText.value,
+        notes: els.notes.value,
+        morningDone: countOccurrences(els.morningText.value, affirmation),
+        afternoonDone: countOccurrences(els.afternoonText.value, affirmation),
+        nightDone: countOccurrences(els.nightText.value, affirmation),
+      };
+      save();
+      renderStats();
+      renderCalendar();
+      updateButtons();
+    }
+
+    function renderFields() {
+      const today = getTodayRecord();
+      els.affirmation.value = state.affirmation || today.affirmation || '';
+      els.morningText.value = today.morningText || '';
+      els.afternoonText.value = today.afternoonText || '';
+      els.nightText.value = today.nightText || '';
+      els.notes.value = today.notes || '';
+    }
+
+    function renderStats() {
+      const affirmation = els.affirmation.value;
+      const morning = countOccurrences(els.morningText.value, affirmation);
+      const afternoon = countOccurrences(els.afternoonText.value, affirmation);
+      const night = countOccurrences(els.nightText.value, affirmation);
+
+      const total = Math.min(morning, 3) + Math.min(afternoon, 6) + Math.min(night, 9);
+      const progress = Math.round((total / 18) * 100);
+
+      els.morningCount.textContent = `${Math.min(morning, 3)}/3`;
+      els.afternoonCount.textContent = `${Math.min(afternoon, 6)}/6`;
+      els.nightCount.textContent = `${Math.min(night, 9)}/9`;
+      els.morningCount.classList.toggle('done', morning >= 3);
+      els.afternoonCount.classList.toggle('done', afternoon >= 6);
+      els.nightCount.classList.toggle('done', night >= 9);
+      els.progressPercent.textContent = `${progress}%`;
+      els.progressText.textContent = `${total}/18 repeticiones`;
+      els.progressFill.style.width = `${progress}%`;
+      els.streakText.textContent = `Racha: ${calculateStreak()} días`;
+    }
+
+    function calculateStreak() {
+      let count = 0;
+      const d = new Date();
+      while (true) {
+        const key = d.toISOString().slice(0, 10);
+        const day = state.history[key];
+        const done = !!day && day.morningDone >= 3 && day.afternoonDone >= 6 && day.nightDone >= 9;
+        if (!done) break;
+        count += 1;
+        d.setDate(d.getDate() - 1);
+      }
+      return count;
+    }
+
+    function renderCalendar() {
+      const completed = Object.values(state.history)
+        .filter(day => day.morningDone >= 3 && day.afternoonDone >= 6 && day.nightDone >= 9)
+        .map(day => day.date)
+        .sort()
+        .reverse()
+        .slice(0, 14);
+
+      if (!completed.length) {
+        els.calendar.innerHTML = '<div class="small" style="grid-column:1/-1;">Todavía no hay días completos. Mañana puedes empezar tu primera racha.</div>';
+        return;
+      }
+
+      els.calendar.innerHTML = completed.map(day => `<div class="day-pill">${day}</div>`).join('');
+    }
+
+    function autofill(times, field) {
+      const phrase = els.affirmation.value.trim();
+      if (!phrase) return;
+      const text = Array.from({ length: times }, () => phrase).join('\n');
+      field.value = text;
+      saveTodayFields();
+    }
+
+    function updateButtons() {
+      const disabled = !els.affirmation.value.trim();
+      els.fillMorning.disabled = disabled;
+      els.fillAfternoon.disabled = disabled;
+      els.fillNight.disabled = disabled;
+    }
+
+    function bind() {
+      els.themeToggle.addEventListener('click', () => {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        applyTheme();
+        save();
+      });
+
+      [els.affirmation, els.morningText, els.afternoonText, els.nightText, els.notes].forEach(el => {
+        el.addEventListener('input', saveTodayFields);
+      });
+
+      els.fillMorning.addEventListener('click', () => autofill(3, els.morningText));
+      els.fillAfternoon.addEventListener('click', () => autofill(6, els.afternoonText));
+      els.fillNight.addEventListener('click', () => autofill(9, els.nightText));
+
+      els.resetToday.addEventListener('click', () => {
+        els.morningText.value = '';
+        els.afternoonText.value = '';
+        els.nightText.value = '';
+        els.notes.value = '';
+        saveTodayFields();
+      });
+
+      els.deleteToday.addEventListener('click', () => {
+        delete state.history[todayKey()];
+        save();
+        renderFields();
+        renderStats();
+        renderCalendar();
+      });
+    }
+
+    load();
+    applyTheme();
+    renderFields();
+    renderStats();
+    renderCalendar();
+    updateButtons();
+    bind();
+  </script>
+</body>
+</html>
